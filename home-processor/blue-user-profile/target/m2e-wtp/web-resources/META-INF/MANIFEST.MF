@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: blue-user-profile
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: Arash
+Implementation-Vendor-Id: ca.home.processor
+Build-Jdk: 1.8.0_151
+Implementation-URL: http://projects.spring.io/spring-boot/home-process
+ or/blue-user-profile/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+
