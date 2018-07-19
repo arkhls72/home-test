@@ -14,8 +14,7 @@
   <modules>
   	<module>job-processor</module>
     <module>data-processor</module>
-	<module>blue-user-profile</module>
-	<module>depot</module>
+
   </modules>
  <repositories>
     <repository>

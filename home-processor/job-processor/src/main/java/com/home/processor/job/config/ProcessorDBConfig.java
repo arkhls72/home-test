@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -33,16 +33,19 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.home.processor.job.dto.StudentDTO;
-import com.home.processor.job.model.Student;
+import com.home.processor.job.persistant.domain.Student;
+import com.home.processor.job.persistant.domain.StudentTarget;
 
 @Configuration
 @EnableBatchProcessing
-@EntityScan("com.home.processor")
+@EntityScan("com.home.processor.job.persistant.domain")
+@EnableJpaRepositories({
+"com.home.processor.job.persistant.repository"})
 @EnableConfigurationProperties
 @EnableWebMvc
 public class ProcessorDBConfig {
-    private static final String QUERY_FIND_STUDENTS = "select * from ( Select id, name,email, ROW_NUMBER() OVER (ORDER BY id ) as RowNo from Student) t where RowNo between ";
-   
+//    private static final String QUERY_FIND_STUDENTS = "select * from ( SELECT id, name,email, ROW_NUMBER() OVER (ORDER BY id ) as RowNo from TB_STUDENT) t where RowNo between ";
+    private static final String QUERY_FIND_STUDENTS = "select * from TB_STUDENT LIMIT ";
 
     private EntityManager entityManager;
     
@@ -81,10 +84,12 @@ public class ProcessorDBConfig {
     public Step firstStep(ItemReader<StudentDTO> itemReader) throws Exception {
         return stepBuilderFactory.get("firstStep")
                 .repository(jobRepository())
-                .<StudentDTO, Student> chunk(70)
+                .<StudentDTO, StudentTarget> chunk(70)
                 .reader(itemReader)
                 .processor(studentItemProcessor())
                 .writer(writer())
+                .taskExecutor(taskExecuter())
+                .throttleLimit(10)
                 .build();
     }
     
@@ -98,11 +103,11 @@ public class ProcessorDBConfig {
     public ItemReader<StudentDTO> itemReader(@Value("#{jobParameters['start']}") String start,@Value("#{jobParameters['end']}") String end) throws UnexpectedInputException, ParseException, Exception {
         JdbcCursorItemReader<StudentDTO> itemReader = new JdbcCursorItemReader<>();
         StringBuilder sb = new StringBuilder();
-        sb.append(QUERY_FIND_STUDENTS).append(start).append(" AND ").append(end);
+        sb.append(QUERY_FIND_STUDENTS).append(end).append(" OFFSET ").append(start);
         itemReader.setDataSource(dataSource);
         itemReader.setSql(sb.toString());
         itemReader.setRowMapper(new StudentMapper());
-        itemReader.setFetchSize(750);
+        itemReader.setFetchSize(500);
         itemReader.setSaveState(false);
         itemReader.setVerifyCursorPosition(false);
         itemReader.afterPropertiesSet();
@@ -117,8 +122,8 @@ public class ProcessorDBConfig {
     
    
     @Bean
-    public ItemWriter<Student>  writer() {
-        JpaItemWriter<Student> writer = new JpaItemWriter<>();
+    public ItemWriter<StudentTarget>  writer() {
+        JpaItemWriter<StudentTarget> writer = new JpaItemWriter<>();
         writer.setEntityManagerFactory(entityManager.getEntityManagerFactory());
         
         return writer;
@@ -143,7 +148,7 @@ public class ProcessorDBConfig {
     }
   
   @Bean(name="threadPoolTaskExecutor")
-  public ThreadPoolTaskExecutor threadPoolTaskExecutor(){
+  public ThreadPoolTaskExecutor taskExecuter(){
       ThreadPoolTaskExecutor  threadPoolTaskExecutor = new ThreadPoolTaskExecutor();      
       threadPoolTaskExecutor.setCorePoolSize(20);
         threadPoolTaskExecutor.setMaxPoolSize(100);
@@ -155,6 +160,18 @@ public class ProcessorDBConfig {
         
   }   
   
+  @Bean(name="threadPoolLauncher")
+  public ThreadPoolTaskExecutor threadLuncher(){
+        ThreadPoolTaskExecutor  threadPoolTaskExecutor = new ThreadPoolTaskExecutor();      
+        threadPoolTaskExecutor.setCorePoolSize(10);
+        threadPoolTaskExecutor.setMaxPoolSize(50);
+        threadPoolTaskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+        threadPoolTaskExecutor.setQueueCapacity(100);
+        threadPoolTaskExecutor.setThreadNamePrefix("myHomethread2");
+        threadPoolTaskExecutor.initialize();
+        return threadPoolTaskExecutor;    
+        
+  }   
   @Bean
   public JobTaskExecuterListener  jobTaskExecuterListener() {
       return new JobTaskExecuterListener();

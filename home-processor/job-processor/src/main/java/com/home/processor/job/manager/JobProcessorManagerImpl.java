@@ -21,14 +21,13 @@ public class JobProcessorManagerImpl implements JobProcessorManager {
     private static final Logger logger = LoggerFactory.getLogger(JobProcessorManagerImpl.class);
     
     @Autowired
-    @Qualifier(value="threadPoolTaskExecutor")
+    @Qualifier(value="threadPoolLauncher")
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
    
     @Autowired
     private JobProcessorService jobProcessorService;
 
     
-    @Async
     @Override
     public void executeAsynch(List<EventDetails> events) {
         logger.info("****** Job Processor started Time : " + new Date());
@@ -38,7 +37,7 @@ public class JobProcessorManagerImpl implements JobProcessorManager {
             
             if (i % 5==0) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(20000);
+                    TimeUnit.MILLISECONDS.sleep(5000);
                 } catch (InterruptedException e) {
    
                     logger.error(e.getMessage());

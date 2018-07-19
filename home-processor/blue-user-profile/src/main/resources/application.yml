@@ -1,8 +1,0 @@
-spring:
-    autoconfigure:
-        exclude:
-            org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-job-processor:
-    serverS1Url: http://localhost:8080/job-processor
-    serverS2Url: http://192.168.0.101:8080/job-processor
-    ingestUrl: /ingest   
