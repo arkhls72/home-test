@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.home.processor.job.persistant.domain.Teacher;
 
 @Repository
-public interface TeacherRepository extends JpaRepository<Teacher, Long>{
+public interface TeacherRepository extends JpaRepository<Teacher, Integer>{
 
 }

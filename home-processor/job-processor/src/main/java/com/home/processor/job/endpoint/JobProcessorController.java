@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.home.processor.job.config.StudentMapper;
 import com.home.processor.job.dto.EventDetails;
 import com.home.processor.job.dto.EventRequestDTO;
+import com.home.processor.job.dto.StudentDTO;
 import com.home.processor.job.manager.JobProcessorManager;
+import com.home.processor.job.persistant.domain.Student;
 import com.home.processor.job.service.DataProcessorService;
 
 
@@ -48,11 +51,11 @@ public class JobProcessorController {
         Object[] params = null;
         
         System.out.println("Start-date:" + new Date());
-        String insertSql = "INSERT INTO TB_STUDENT(id,name,email) values(?,?,?)";
+        String insertSql = "INSERT INTO niko.TB_STUDENT(id,name,email) values(?,?,?)";
         
-        int[] types = new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR };
-        for (int i=1;i<100000;i++) {
-            params = new Object[] { String.valueOf(i), "A" + String.valueOf(i), String.valueOf(i) + "@rogers.com"};
+        int[] types = new int[] { Types.INTEGER, Types.VARCHAR, Types.VARCHAR };
+        for (int i=1;i<100;i++) {
+            params = new Object[] { i, "A" + String.valueOf(i), String.valueOf(i) + "@rogers.com"};
             jdbcTemplate.update(insertSql, params, types);
         }
         
@@ -65,5 +68,12 @@ public class JobProcessorController {
     public void ingest() throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException {
     	 Map<String, List<EventDetails>> events = dataProcessorService.createEvents();
     	 jobProcessorManager.executeAsynch(events.get("S1"));
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, path = "/get")
+    @ResponseStatus(value=HttpStatus.OK)
+    public List<StudentDTO> get() throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException {
+    	
+    	return jdbcTemplate.query("select * from TB_STUDENT ", new StudentMapper());
     }
 }

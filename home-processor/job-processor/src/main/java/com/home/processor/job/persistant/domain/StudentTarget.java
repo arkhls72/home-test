@@ -1,20 +1,27 @@
 package com.home.processor.job.persistant.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "TB_STUDENT_TARGET")
+@Table(name = "TB_STUDENT_TARGET",schema="niko")
 public class StudentTarget {
     
     @Id
     @Column(name = "id")
-    private String id;
+    @GeneratedValue(generator = "client_id_seq")
+    @SequenceGenerator(name = "client_id_seq", sequenceName = "client_id_seq", schema = "niko", allocationSize = 1)
+    private Integer id;
     
     @Column(name = "email")
     private String email;
@@ -22,8 +29,11 @@ public class StudentTarget {
     @Column(name = "name")
     private String name;
     
-    @OneToMany
-    private List<Teacher> teachers;
+    @Column(name = "studentid",nullable=false)
+    private Integer stuentId;
+    
+   @OneToMany(mappedBy="studentTarget", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+   private List<Teacher> teachers = new ArrayList<>();
     
     public StudentTarget() {
         
@@ -45,13 +55,29 @@ public class StudentTarget {
         this.name = name;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public Integer getStuentId() {
+		return stuentId;
+	}
+
+	public void setStuentId(Integer stuentId) {
+		this.stuentId = stuentId;
+	}
+
+	public void setId(Integer id) {
         this.id = id;
     }
+
+	public List<Teacher> getTeachers() {
+		return teachers;
+	}
+
+	public void setTeachers(List<Teacher> teachers) {
+		this.teachers = teachers;
+	}
 
 	@Override
 	public int hashCode() {
@@ -60,6 +86,8 @@ public class StudentTarget {
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((stuentId == null) ? 0 : stuentId.hashCode());
+		result = prime * result + ((teachers == null) ? 0 : teachers.hashCode());
 		return result;
 	}
 
@@ -87,7 +115,18 @@ public class StudentTarget {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (stuentId == null) {
+			if (other.stuentId != null)
+				return false;
+		} else if (!stuentId.equals(other.stuentId))
+			return false;
+		if (teachers == null) {
+			if (other.teachers != null)
+				return false;
+		} else if (!teachers.equals(other.teachers))
+			return false;
 		return true;
 	}
 
+	
 }

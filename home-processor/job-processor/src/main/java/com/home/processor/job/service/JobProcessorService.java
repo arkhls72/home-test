@@ -6,7 +6,11 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 
 import com.home.processor.job.dto.EventDetails;
+import com.home.processor.job.dto.StudentDTO;
+import com.home.processor.job.persistant.domain.Student;
+import com.home.processor.job.persistant.domain.StudentTarget;
 
 public interface JobProcessorService {
 	 void execute(EventDetails eventDetails)throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException;
+	 public StudentTarget processStudent(StudentDTO source) ;
 }

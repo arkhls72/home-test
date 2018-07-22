@@ -7,6 +7,6 @@ import com.home.processor.job.persistant.domain.Student;
 import com.home.processor.job.persistant.domain.Teacher;
 
 @Repository
-public interface StudentRepository  extends JpaRepository<Student, Long>{
+public interface StudentRepository  extends JpaRepository<Student, Integer>{
 
 }

@@ -6,6 +6,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
@@ -35,23 +39,16 @@ public class JobProcessorManagerImpl implements JobProcessorManager {
         int i = 1;
         for (EventDetails item:events) {
             
-            if (i % 5==0) {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(5000);
-                } catch (InterruptedException e) {
-   
-                    logger.error(e.getMessage());
-                }
-            }
-            threadPoolTaskExecutor.submit(()->{
-                    try {
-                        jobProcessorService.execute(item);
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        logger.error(e.getMessage());
-                    }
-            });
-            i++;
+         
+                        try {
+							jobProcessorService.execute(item);
+						} catch (JobExecutionAlreadyRunningException | JobRestartException
+								| JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+              
+          
         }
     }
 }

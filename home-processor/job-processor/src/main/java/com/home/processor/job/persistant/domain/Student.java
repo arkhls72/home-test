@@ -4,27 +4,28 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "TB_STUDENT")
+@Table(name = "TB_STUDENT",schema="niko")
 public class Student {
     
     @Id
     @Column(name = "id")
-    private String id;
+    private Integer id;
     
     @Column(name = "email")
     private String email;
     
     @Column(name = "name")
     private String name;
-    
-    @OneToMany
-    private List<Teacher> teachers;
-    
+//    
+//    @OneToMany(mappedBy = "student" , fetch = FetchType.EAGER)
+//    private List<Teacher> teachers;
+//    
     public Student() {
         
     }
@@ -45,11 +46,11 @@ public class Student {
         this.name = name;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

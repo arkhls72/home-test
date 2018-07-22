@@ -14,12 +14,10 @@ public class StudentMapper implements RowMapper<StudentDTO> {
             StudentDTO student=null;
             if (rs !=null) {
                 student= new StudentDTO();
-                student.setId(rs.getString("id"));
-                student.setName(rs.getString("name"));
+                student.setId(rs.getInt("id"));
+              student.setName(rs.getString("name"));
                 student.setEmail(rs.getString("email"));
             }
-          
-
             return student;
         }
 }

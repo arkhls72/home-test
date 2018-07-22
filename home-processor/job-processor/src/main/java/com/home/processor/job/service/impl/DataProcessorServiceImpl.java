@@ -26,7 +26,7 @@ public class DataProcessorServiceImpl implements DataProcessorService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     
-    private final String QUERY = "SELECT count(*) FROM TB_STUDENT";
+    private final String QUERY = "SELECT count(*) FROM niko.TB_STUDENT";
 
    
     public Map<String, List<EventDetails>> createEvents() {
@@ -45,7 +45,7 @@ public class DataProcessorServiceImpl implements DataProcessorService {
         	 EventDetails event = new EventDetails();
 
              event.setStart(1L);
-             event.setEnd(Long.valueOf(999));
+             event.setEnd(Long.valueOf(rows));
 
              event.setName("page-" + String.valueOf(1));
             

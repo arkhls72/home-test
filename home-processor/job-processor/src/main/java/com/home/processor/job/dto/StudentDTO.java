@@ -1,8 +1,10 @@
 package com.home.processor.job.dto;
 
-public class StudentDTO {
+import java.io.Serializable;
 
-    private String id;
+public class StudentDTO implements Serializable {
+
+    private Integer id;
     private String email;
     private String name;
 
@@ -25,11 +27,11 @@ public class StudentDTO {
         this.name = name;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

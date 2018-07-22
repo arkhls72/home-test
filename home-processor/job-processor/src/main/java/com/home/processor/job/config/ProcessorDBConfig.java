@@ -45,8 +45,11 @@ import com.home.processor.job.persistant.domain.StudentTarget;
 @EnableWebMvc
 public class ProcessorDBConfig {
 //    private static final String QUERY_FIND_STUDENTS = "select * from ( SELECT id, name,email, ROW_NUMBER() OVER (ORDER BY id ) as RowNo from TB_STUDENT) t where RowNo between ";
-    private static final String QUERY_FIND_STUDENTS = "select * from TB_STUDENT LIMIT ";
-
+//    private static final String QUERY_FIND_STUDENTS = "select * from TB_STUDENT LIMIT ";
+//	private static final String QUERY_FIND_STUDENTS = "select * from TB_STUDENT ORDER BY id OFFSET ";
+//	private static final String QUERY_FIND_STUDENTS = "select * from ( Select id, name,email, ROW_NUMBER() OVER (ORDER BY id ) as RowNo from TB_Student) t where RowNo between ";
+	
+	private static final String QUERY_FIND_STUDENTS = "select id, name, email from niko.TB_STUDENT ";
     private EntityManager entityManager;
     
     @Autowired
@@ -84,12 +87,10 @@ public class ProcessorDBConfig {
     public Step firstStep(ItemReader<StudentDTO> itemReader) throws Exception {
         return stepBuilderFactory.get("firstStep")
                 .repository(jobRepository())
-                .<StudentDTO, StudentTarget> chunk(70)
+                .<StudentDTO, StudentTarget> chunk(50)
                 .reader(itemReader)
                 .processor(studentItemProcessor())
                 .writer(writer())
-                .taskExecutor(taskExecuter())
-                .throttleLimit(10)
                 .build();
     }
     
@@ -103,16 +104,18 @@ public class ProcessorDBConfig {
     public ItemReader<StudentDTO> itemReader(@Value("#{jobParameters['start']}") String start,@Value("#{jobParameters['end']}") String end) throws UnexpectedInputException, ParseException, Exception {
         JdbcCursorItemReader<StudentDTO> itemReader = new JdbcCursorItemReader<>();
         StringBuilder sb = new StringBuilder();
-        sb.append(QUERY_FIND_STUDENTS).append(end).append(" OFFSET ").append(start);
+ 
+//        sb.append(QUERY_FIND_STUDENTS).append(Integer.parseInt(start)).append(" ROWS FETCH NEXT  ").append(Integer.parseInt(end)).append(" ROWS").append(" ONLY");
+        sb.append(QUERY_FIND_STUDENTS);
+        
         itemReader.setDataSource(dataSource);
         itemReader.setSql(sb.toString());
         itemReader.setRowMapper(new StudentMapper());
-        itemReader.setFetchSize(500);
+        itemReader.setFetchSize(50);
         itemReader.setSaveState(false);
         itemReader.setVerifyCursorPosition(false);
         itemReader.afterPropertiesSet();
        
-      
         ExecutionContext executionContext = new ExecutionContext();
         itemReader.open(executionContext);
         
@@ -123,10 +126,7 @@ public class ProcessorDBConfig {
    
     @Bean
     public ItemWriter<StudentTarget>  writer() {
-        JpaItemWriter<StudentTarget> writer = new JpaItemWriter<>();
-        writer.setEntityManagerFactory(entityManager.getEntityManagerFactory());
-        
-        return writer;
+        return new StudentItemWriter();
     }
     
     @Bean(name="batchTransactionManager")
