@@ -1,0 +1,747 @@
+Database Normalization : 
+
+What is Normalization?
+Organizing data in a database. eliminating redundant data (for example, storing the same data in more than one table) (only storing related data in a table).
+	
+The Normal Forms
+the lowest form of normalization, referred to as first normal form or 1NF) 
+through five (fifth normal form or 5NF). 
+In practical applications, you'll often see 1NF, 2NF, and 3NF along with the occasional 4NF. 
+ 
+1) First Normal Form (1NF)
+	
+	Eliminate duplicative columns from the same table. 
+	Create separate tables for each group of related data and identify each row with a unique column or set of columns (the primary key). 
+	
+2) Second Normal Form (2NF)
+     Removing duplicative data:      
+    Remove subsets of data that apply to multiple rows of a table and place them in separate tables. 
+    Create relationships between these new tables and their predecessors through the use of foreign keys. 
+    
+3) Third Normal Form (3NF)
+   Third normal form (3NF) goes one large step further: 
+   Meet all the requirements of the second normal form. 
+   Remove columns that are not dependent upon the primary key. 
+   
+4) Fourth Normal Form (4NF)
+   
+   A relation is in 4NF if it has no multi-valued dependencies.--> Course ,book,lecture in the same table 
+    Remember, these normalization guidelines are cumulative. 
+   
+
+If you'd like to ensure your database is normalized, explore our other articles in this series: 
+
+
+
+
+
+*********************************************    FIRST BOOK ************************************************
+
+set echo on
+set feedback on
+set time out on
+set linesize 170
+set pagesize 40
+----------------------
+
+each  department_id has how many first_name or how many rows based on First_name
+
+select department_id,count(first_name)
+rom employees 
+group by department_id
+
+depId 
+------
+10                  2
+20	            24
+30                  1
+
+-------------------------------------------------------------------------------------
+using Group by with having clause
+
+select department_id , avg(salary) 
+from employees 
+where  department_id IN (20,70)
+having avg(salary) > 8000
+group by department_id
+
+Where clause must be the first \
+
+------------------------------------------------------------------------------------------
+
+JOIN 
+1) Natural JOIN
+	When 2 tables have the same column name the we can do natural join 
+
+	select department_id , department_name 
+	from departments 
+	natural join locations
+	where department_Id in(20,70)
+	table nnaturals has 2 department_id as well as employees table 
+
+	
+2) USNING CLAUSE JOIN
+    We can not use any Alias or name inside USING
+
+   select E.employeeId,E.first_name 
+   from employees E
+
+   JOIN departments USNING(depatmet_id)
+   where department_id = 20;
+
+---------------------------------------------------------------------------------------
+
+LEFT JOIN:
+
+returns all the rows that are exist in 2 tables plus all rows that are exist in master and not exist in details
+
+
+select E.forst_name,D.department_id 
+from employees E
+Left outer join Departments D
+on d.department_id = E.department_id
+
+RIGHT JOIN 
+
+Returns all teh rows that are exist in 2 tables plus all rows that are exist in details and not exist in master.
+
+FULL OUTER JOIN 
+
+Return all the rows that are exist in 2 tables plus all the rows that are not exist in Master and Details
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+NULL and NOT NULL
+
+
+NOT IN --> equals <> ALL
+select * from departmenst 
+where manager_id is NUll
+
+
+select * from departments 
+where manager_id IS NOT NULL
+------------------------------------------------------------------------------------------
+SUBQUERY 
+--------
+if subquery return null the restlt of this query will be no record 
+
+	Select last_name , job_id 
+	from employees 
+	where salary < (select job_id from employees where last_name='HASS');
+	
+
+
+WE can use   ANY  , ALL ,  IN , NOT IN 
+
+ANY means OR 
+
+
+select employee_id,last_name,job_id salary 
+from employees 
+where salary< ANY (select salary from employees where job_id = 'IT_PROG')
+AND job_id not IN ('IT_PROG','SA_REP')
+
+----------------------------------------------------------------------------------
+
+SET operator 
+
+1) UNION  A , B
+   
+   All distict rows in both A and B that are selected by either first or the second query
+	
+
+2) UNION ALL 
+   All rows that are selected by either query including duplicate
+   
+3) INTERSECT
+   All distinced ows selected by both query 
+   
+4) MINUS
+    All Distince rows selected by first query and not select by second query
+  
+-------------------------------------------------------------------------------------------------------------------
+
+DML
+----    Data manipulation language 
+
+Insert to DB by getting Data of another select Statement 
+Note --> no Values here 
+
+INSERT INTO sales_reps(id,name,salary,commission_pct)  
+            select employee_id,last_name,salary,ommission_pct from employees where job_id  LIKE '%REP'
+            
+INSERT INTO (select employee_id,last_name from emp3) values (99999,'kir','kos')            ;
+
+Insert with check options :
+Check options --> prohibits us from changing rows that are not in the subquery 
+
+
+insert into (select employee_id,first_name 
+             from emp13 
+             where department_id = 50 with check option)
+values(9999,arash)             
+
+
+insert into dept3 (departmet_id,department_name,mnager_id) values (300,'Engineering',DEFAULT)
+
+
+
+------------------------------------------------------------------------------------------------------------------
+
+UPDATE copy_emp 
+set    department_id = (select department_id from employees where employee_id = 100)
+where  job_id = (select job_id from employees where employee_id = 200)
+
+
+DELETE 
+Delete employees 
+where empoyee_id = (select employee_id from employees where first_mnmae = 'Arash')
+
+
+Truncate 
+remove all the rows from the table ,can not be undone
+Generates no rollback 
+does not fire Delete triggers 
+
+Truncate talbe tblArash 
+
+------------------------------------------------------------------------------------------------------------------------
+
+DML --> data manipulation language --> select,insert,update,delete,merg                   
+DDL --> Data defination language  -->create,alter,drop,rename,trunk,comment      
+DCL --> Data control -->grant,revoke
+
+Database Transaction :
+Commit or rollback executed 
+DDl or DCL are automatic commit
+
+
+Type of Transaction :
+   Explicit Transction 
+   Impliict Transaction 
+   
+Explicit Transaction 
+
+Commit 
+Rollback 
+Savepoint 
+Rollback to savepoint 
+
+Implicit Transaction:
+
+DDL or DCL is executed 
+normal exit from isql plus 
+automtaic rollback will under abnormal termination 
+------------------------------------------------------------------------------------------------------------------------
+State of Data before commit or rollback :
+----------------------------------------
+DML affected the data in buffer 
+user who run DML can view the changes 
+other user can not view the changes 
+affected rows are locked so other user can not modified affected rows 
+
+--------------------------------------------------------------------------------
+Satte of data after commit :
+----------------------------
+data affected are made permanet 
+the previous state of data is permanetly lost 
+all user can see the changes 
+
+--------------------------------------------------------------------------------
+State of data after rollback 
+data changes are undone 
+previous state of data is restored 
+lockes on affected rows are released
+---------------------------------
+
+Rollback Statement level :
+if a single DML is failed during execution only that statement is rollback 
+
+
+*********************************************    SECOND BOOK ************************************************
+
+Schema is an collection of objects such as tables,views and sequences 
+
+Database security :
+
+System security --> System Priviliage 
+Data Security -->    Object priviliage 
+
+System privilage:
+----------------
+To gain access to Database 
+
+
+Object Privilage 
+----------------
+To manipulate Data and content of the object needs Object privilage 
+
+
+				----------------
+				System privilage 
+				----------------
+
+Create/Drop user
+Backup/Select/Create tables 
+
+
+1) create user arash 
+   identified by tttt
+
+   greant create session,create table,create view,create sequnce to arash
+
+   create role homerole
+
+   grant creaet table,create view to homeRole
+
+   grant homerole to arash
+   
+   changing the password:
+
+   alter user arash 
+   identified by newpass
+
+----------------
+Object privilage
+----------------
+
+select 
+update 
+insert 
+delete 
+alter
+execute 
+index
+references
+
+Grant select,update on employees 
+to arash 
+
+grant select,update ,insert on departmenst to homeRole
+
+---------------------------------------------------------------
+
+Grant select,insert on employees to arash 
+
+revoke select,insert on employees from arash
+
+data dictionary :
+to see about the user  -->  USER_TAB_PRIVS 
+			    USER-TAB_PRIVIS_MADE 	
+
+select grantee,privilege,table_name , from user_tab_privs
+where grantee = 'ARASH'
+
+alter table table_name
+rename to new_table_name;
+
+alter table sales 
+rename column order_date to date_of_order;
+
+
+-----------------------------------------------------------------
+
+--------------------
+Create table 
+--------------------
+
+
+-->  Can not have Create or repalce table 
+
+
+1) create index emp_id_index on Arash_rep3(emp_id);
+
+2)
+
+create table new_emp
+ (employeeid NUMBER(6)  PRIMARY KEY USING INDEX (create INDEX emp_id_idx ON new_emp (employeeId)),
+   first_name varchar2(9))
+   
+   
+ To check where indexes are saved --> select * from USER_INDEXES 
+ 
+ To set primary keh on index column
+ 
+ ALETER TABLE new_emp 
+ ADD PRIMARY KEY (employeeId) USING INDEX emp_id_indx ;
+
+
+
+Modify tables 
+--------------
+alter table trade 
+add (tradeName varchar2(6))
+
+
+Alter table trade 
+Modify (tradeName varchar2(20))
+
+Aletr Table Trade 
+drop column id ;
+
+Aletr table Trade 
+add(confimdate varchar2(3));
+
+aletr table Trade 
+set unused  (conifrmdate )
+
+
+alter table arash_rep
+add ( constraint emp_id_pk primary key(emp_id))
+
+----------------------------------------------------------------
+
+aletr table trade 
+modify tradeId primary key 
+
+alter table tradeClient 
+modified clientId primary key 
+
+alter table tradeClient 
+ADD constraints trade_fk
+FOREIGN KEY (tradeId)   <--- in TradeClinet
+references Trade(tradeID)   <---  in Trade table
+
+------------------------------------------------------------------
+
+Alter table Trade Client 
+ADD constraints  trade_fk  FOREIGN KEY (tradeId)  
+references (tradeId) ON DELEET CASECADE
+
+-------------------------------------------------------------------
+DEFERRABLE CONSSTRAINT 
+WE must create non-unique contrain for that columns FK
+
+Deferreable constraint will be chacked at the end of Commit    -> we use that only for delay 
+Immediate Constraints will be cheked for any single statement
+
+ALTER Table trade
+ADD constarint tradeID_PK PRIMARY KEY (tradeID)  
+DEFERRABLE INITIALY DEFERRED.
+------------------------------------------------------------------------------------------
+
+DROP a constraing 
+-----------------
+
+ALTER table trade 
+DROP contrainst emp_mgr_fk 
+
+DROP all FK referemnces 
+
+ALETR table tradeClinet 
+DROP PRIMARY KEY CASCADE 
+
+------------------
+DISABLE CONSTRAINT
+------------------
+
+ALTER TABLE Trade 
+DISABLE CONSTRAINT tarde_fk
+
+
+----------------
+ENABLE CONSTRAINT
+
+Unique index will be automatically created when we enable UNIQUE 
+
+ALTER table  trade 
+disable CONSTRAINT emp_fk
+
+
+ALTER table  trade 
+enable CONSTRAINT emp_fk
+
+-------------------------
+
+
+Aleter table trade 
+drop column tradeid casecade constraints
+
+------------------------------
+
+INDEX
+-----
+
+2 type of index : 
+	Automatically --> create PK and UNIQUE KEY
+	Manually --> create indexe statement or crate table with index 
+	
+
+
+ 
+ 
+ FUnction based index 
+ --------------------
+ create index emp_id_indx 
+ ON employees (UPPER(department_name))
+ 
+ Oracle uses this when we have WHERE cluase that has UPPER call 
+ 
+ select * from employees where upper(last_name)='KING'
+ 
+ 
+ DROP Index 
+ -----------
+ 
+ Drop index emp_id_indx
+ 
+ 
+ DROP TABLE dept80 PURGE --> recycle table 
+ 
+ 
+ ------------------------------------------------
+ 
+ 
+ who earns more than avg salary in their department 
+ 
+ select e.last_name ,e.salary,B.SALVAGE
+ from employees e,(select department_idavg(salary) SALVAGE
+                          from employees 
+                          group by depart_id) B
+
+where e.department_id = B.department_id 
+and E.salary > b.SALVAGE 
+-----------------------------------------------------------------------------
+
+MERG STATEMENT 
+--------------
+
+MERGE INTO emp13 C 
+	using employess E
+	ON (E.employeeId = C.employeeId)
+WHEN MATCHED THEN 
+	UPDATE SET 
+	C.first_name = E.first_name 
+	.......
+WHEN NOT MATCHED THEN 
+        INSERT VALUES (E.employee_id,E.first_name and ....);
+
+--------------------------------------------------------------------------------
+Comparison Sunquery 
+--------------------
+
+select employee_id,manager_id from Employees 
+where (manager_id,department_id) IN (select manager_id , department_id from employees where employee_id IN (199,174))
+AND employee_id NOT IN (199,174);
+
+
+
+Scaler Subquery 
+----------------
+
+select employee_id , last_name, (case when separtment_id = (select department_id from departments where location_id=1800) THEN 'CANADA' ELSE 'USA' END) location
+from employees 
+
+
+Find employees who are earn more than Avrage salary in their department --> 
+
+select first_name ,last_name
+
+from employees OUTER 
+
+where salary > (select AVG(Salary) from employees where department_id = OUTER.department_id)
+
+-----------------------------------------------------
+
+
+Find an employees who change the job at least twise
+
+select e.employee_id,last_name,e.job_id
+from employees E
+where 2<= (select count(*)  from job_history where employee_id = e.epmployee_id))
+
+---------------------------------------------------------
+
+Employees who have at least One person reporting to them --> list of managers  who have employee to report to them .
+
+select employee_id,last_name 
+from employees OUTER 
+where Exists (seelct 'x' from employees where OUTER.employee_id = manager_id);
+
+
+--------------------------
+
+select department_id,department_name 
+from departments  OUTER 
+where NOT EXISTS ( select 'X' from employees where department_id = OUTER.department_id ) 
+
+------------------------------------------
+
+Corrolated UPDATE 
+
+update employee E
+set department_name = (select department_name from departments D where d.department_id = E.department_id))
+
+-------------------------------------------
+
+Delete only those rows that are exists in Hostory 
+
+delete from employee E
+where employee_id = (select employee_id from emp_history where employee_id = E.employee_id)
+
+
+--------------  WITH CLAUSE 
+
+page 6-23 from second book
+
+------------------------
+
+Waling to the tree 
+
+Select last_name
+from employees 
+START WITH last_name ='King' 
+CONNECT BY PRIOR employee_id = manager_id
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*****************************************************************    BOOK 3 *******************************************************************
+
+Database Object 
+
+1) Tables 
+2) Views
+3) Sequences  --> generate numuric value 
+4) Index      -->  
+5) Synonym
+
+Constraints :
+NOT -NULL  --> speifies that the column can not conatins a NULL
+UNIQUE      --> specifies the column value must be unique for all rows in a table
+Primary KEY  --> Uniquiely identified  each row of the table 
+Foriegn KEY  --> means there is a releation ship between this columns and references table 
+CHECK  --> means some sort of contion must be true 
+
+
+Primary key can not accept NULL but Unique constraint can be null as long as is unique 
+
+ALetr table trade2 
+Add constraint id_trade_pk PRIMARYKEY(id)
+
+ALETR table Trade2
+
+Add contraint id_tarde_unique UNIQUE(lname)
+
+---------------------
+
+Create table dept80 as 
+select employee_id,first_name,dept80 
+from employees 
+where department_id = 80;
+
+We can not Rollback drop table 
+
+-------------------------------------
+
+View -->  simple View    -> from onlt 1 table 
+          Complex View   --> from many table
+          
+          In complex view 
+          
+          We can not remove or DML on View if there is Group by or Distinct 
+          
+          we use "WITH CHECK OPTION " to make sure nothing goes wrong 
+          
+          WITH CHECK OPTION CONTRAINTS emp_2_pk
+          
+          to deny DML on View we can specifu by WITH READ ONLY 
+          
+          
+          Crteate view emp80 as 
+          select * from employees 
+          WITH READ ONLY
+------------------------------------------
+
+SEQUENCES :
+
+Creaete sequence dept_id_seq
+increamended by 1
+Start with 1
+maxvalue 99999
+NOCACHE 
+NICYCLE
+
+CYLE must not be used for PK 
+NEXTVAL returns the next value of sequence 
+CURRVAL returns the sequence number that user just created 
+
+we can use NEXTVAL nad CURRVAL 
+
+1) in a select list of select state,ment that is not as a part of Subquery 
+2) subquery in insert 
+3) Values clause in Insert 
+4) in set Clause of Update 
+
+WE can not use nextVal currentVal if 
+1) in a select statemet that has Distinct 
+2) select statement that has Group by having order by 
+a subquery in  select,update ,delete 
+in the default opetion of Create table 
+
+
+
+CACHING the sequence gives faster access 
+gaps may occurs if roolback is occued 
+sysem crashes 
+sequence is used in another table 
+----------------------------------------------------------------------
+
+Indexes
+-------
+
+
+
+Autoamtically by created PK --> unique alue index constraint 
+
+Manually --> non-unique index  that user can create manually 
+
+when columns have a wide range of values 
+a column contains a loarge number of null
+1 or more columns are used in wehere clause 
+tables is larg and query returns 2% and 4 % of total rows 
+columns in where,group by . having and JOIN  
+
+
+Synonym is database object that enable us to call a table with another name 
+
+
+---------------------------------------------------------------------------
+
+Data Dictionary :
+
+USER --> user's view , what is in your schema 
+ALL --> what you can access
+DBA  --> DBA view 
+V$ --> Performannce related data 
+
+---------------------------------
+
+USER_OBJECTS
+
+USER_TABLES 
+
+USER_TAB_COLUMNS 
+
+USER CONSTRAINTS 
+
+USER_CONS_COLUMNS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

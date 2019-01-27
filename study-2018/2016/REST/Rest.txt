@@ -1,0 +1,292 @@
+REST web services 
+
+Representational State Transfer
+REST is neither a standard nor a protocol. It is just an architectural style like say 
+for example client-server architecture (client-server is neither a standard nor a protocol). 
+Web services following this architectural style are said to be RESTful Web services.
+
+@GET,@PUt , @POST, @DELETE 
+
+@Path Param : inject the vlaue from URL in to our REST method 
+@Consume: defines MIME type of the request body.
+@Produce: Define MIME  type of  the response Body
+
+Safe method are those that dpo not modify resources such as GET
+An idempotent HTTP method is a HTTP method that can be called many times without different outcomes.
+
+POST to a URL:  creates a child resource at a server defined URL. - Not idenpotent
+PUT to a URL:   creates/replaces the resource in its entirety at the client defined URL - idempotent
+PATCH to a URL: updates part of the resource at that client defined URL - not idenpotent
+
+                
+---------Idem----Safe---------
+OPTIONS	 Yes	 yes    script ask server what header/content type it can make to the non-original host
+GET		 yes	 yes
+HEAD	 yes	 yes
+PUT	     yes	 no    update
+DELETE	 yes	 no
+-----------------------
+POST	 no	     no
+PATCH	 no	     no  partical update
+
+Idempotent
+Clients can make that same call repeatedly while producing the same result.
+Making multiple identical requests has the same effect as making a single request.
+Note that while idempotent operations produce the same result on the server (no side effects), the response itself may not be the same (e.g. a resource's state may change between requests).
+
+
+------------------------------------------------------------------------------
+
+CROSS-ORIGIN
+
+Mechanism that allows restricted resources ( e.g. fonts,images and etc ) on a web page to be requested from another domain 
+outside the domain from where the first resource was requested.
+
+request header sent(OPTION) --> Origin: http://www.example.com
+response header received    -->  access-control-allow-origin : http://www.example.com
+
+
+OPTION 
+Using OPTIONS http request the script can ask what headers/content-type it can make to the non-original host.
+Once the non-original host responds with the OPTIONS response the browser will allow it to make further HTTP requests to this secondary host with 
+the allowed headers/content-type.
+
+
+API versioning: 
+
+Allows you to alter behavior between different clients. 
+
+1. Accept Header Versioning
+	GET /bookings/ HTTP/1.1
+	Host: example.com
+	Accept: application/json; version=1.0
+
+	This is the best pratice that we add attribute "verion=1.0" in our Header. Once the requestin is recieved we navigate to diffrence services as per version
+
+2. URL Path Versioning
+We add V1,V2 and etc in to out URL path
+
+	GET /v1/bookings/ HTTP/1.1
+	Host: example.com
+	Accept: application/json
+
+3.Name space Versioning
+uses namespace instead of Version number
+	
+	GET /v1/something/ HTTP/1.1
+	Host: example.com
+	Accept: application/json
+
+4. Host Name Versioning
+	we ask client to specify the host name of the service in request header
+ 
+	GET /bookings/ HTTP/1.1
+	Host: v1.example.com
+	Accept: application/json
+
+5.  Query Parameter Versioning
+We set the versionin quesry parameter of URL
+	
+	GET /something/?version=0.1 HTTP/1.1
+	Host: example.com
+	Accept: application/json
+    
+6. Custom versioning schemes
+we might have custom schema  as mixed of above mention 
+
+Steps to create REST service 
+1. Rest service module 
+2. REST service Client 
+
+
+1. It is the web appplication based with 1 Jersey Servlet on it 
+<servlet>
+		<servlet-name>jersey</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<load-on-startup>1</load-on-startup>	
+	</servlet>         
+	<servlet-mapping>
+		<servlet-name>jersey</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+		  		
+</servlet-mapping>
+	
+
+Stepes to create REST service 
+
+1. Add Jersey servlet in to web.xml
+2. Init context root in weblogic.xml of Rest module 
+
+    <wls:weblogic-version>12.1.3</wls:weblogic-version>
+    <wls:context-root>isisRest</wls:context-root>
+
+
+3. create abstract class to have a method called getInitialContext() in order to access remote instances EJB API
+
+4. create RestService.java : 
+	Class Level : 
+		@Path("name1")   --> in class level comes after  after root-context
+		
+	Method Level
+		@Path("name2")   comes after class level Path
+		@Produces(MediaType.Application_XML)
+		@GET,@PUT,@POST,@DELETE  --> delete does not work with spring 
+		
+		We initialize 
+		context root: in weblogic.xml of Rest module 
+		shared librray: in weblogic-application.xml
+		
+		
+	
+Difference between ERST and SOAP : 
+
+	SOAP os XML based messages. REST can supports more MIME TYPE 
+	
+	REST is totcally Stateless and SOAP can support Statefull also
+	
+	REST API can be cached by  JAX-RS with Http 1.1  --> cache Control specifies age and behavior
+	
+	
+	public Response getBook(@PathParam("id") long id){
+		Book myBook = getBookFromDB(id);
+
+		CacheControl cc = new CacheControl();
+
+		cc.setMaxAge(86400);
+		cc.setPrivate(true);
+
+		ResponseBuilder builder = Response.ok(myBook);
+		builder.cacheControl(cc);
+		return builder.build();
+	}
+	
+	REST is Lighter, SOAP requires an XML wrapper around every request and response(SOAP Headers, XML tags etc).
+	REST has no XML message, ideal chice for Mobile 
+	REST suports  few more MIME type but SOAP supports only XML 
+	REST development is much easier than SOAP 
+	Browsers can handle REST easily as compared to SOAP as REST is based on HTTP where SOAP is another wrapper over HTTP.
+
+	REST client : 
+	They are the same we can use Spring template or JErsey. Its common in both to defineREST URL, and request Parameters, and request Headers. 
+	
+		
+		
+		
+    Rest Cache 
+	1. Refers to storing the server response in the client itself
+	
+	 server side can have the followiong in response header to configure client-side cache 
+	 
+	 Date
+
+		Date and Time of the resource when it was created.
+	Last Modified
+		Date and Time of the resource when it was last modified.
+
+	Cache-Control
+		Primary header to control caching.
+
+	Expires
+		Expiration date and time of caching.
+
+	Age
+		Duration of cache 
+
+		
+	Always keep static contents like images, CSS, JavaScript cacheable, with expiration date of 2 to 3 days.
+
+	Never keep expiry date too high.
+
+	Dynamic content should be cached for a few hours only.		
+				
+				
+	Authentication:
+		The process of confirming  user identity is called Authentication. 
+
+    REST API Autnetocatopn security : 
+
+		1. Basiec Auth 
+			It is baseic, we endode user name and password in requestheader and  then server-side will validate the cridential in filter chain or intercepter
+
+		2. Oauth 1
+			The protocol uses signatire wich often is HMAC to comboned token nonce and other request based information 
+			provides 2 tokens : Access and Refresh token
+			Access token will expired soon but refresh token will get new access token
+		
+		4. JWT 
+			Jason web token;  JWT has 3 sections : 
+				 Header	
+					It describes the token vontain methadata about 
+					
+				 payload (Claim)
+							Who this person is ?
+							What this person can access?
+							When the token is expired
+					
+				 Signature 
+					Hashcode to verify integrity of the token
+	 
+				var headers = base64URLencode(myHeaders);
+				var claims = base64URLencode(myClaims);
+				var payload = header + "." + claims;
+				 
+				var signature = base64URLencode(HMACSHA256(payload, secret));
+				 
+				var encodedJWT = payload + "." + signature;	 
+				
+				
+				
+				
+				
+3. OAuth 
+
+ It is framework it is not token format 
+ It details how multiple different roles, users in your system, server side apps like an API, and clients such as websites or native mobile apps, can authenticate with each other.
+ 
+Roles : 
+	Both applications and users can be one of the following:
+	
+	Resource Owner
+	Resource Server
+	Client Application
+	Authorization Server	
+	
+Client Types
+	A client is something that consumes your API. IT can be one of the following two types:
+
+	Confidential
+	Public
+	
+	
+Client Profiles
+	There are also client profiles specified by the framework, that describe the kind of application type. They can be:
+
+	Web Application	
+	User Agent
+	Native
+	
+	
+Authorization Grants
+	An authorization grant is a set of permissions given by the resource owner to a client application. They can take the following forms:
+	
+	Authorization Code
+	
+	Implicit
+	
+	Resource Owner Password Credentials
+	
+	Client Credentials
+
+Endpoints
+	In order for all of us this to work the following endpoints are required:
+
+	Authorization Endpoint
+	Token Endpoint
+	Redirection Endpoint
+		
+
+
+SAML 
+Exchanging authentication and authorization data between security domains called SAML is as part of SSO
+
+	 

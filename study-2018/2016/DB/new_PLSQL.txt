@@ -1,0 +1,223 @@
+-------------
+Cursor 
+-------------
+
+DECLARE 
+EMP_ID EMPLOYEES.EMPLOYEE_ID%TYPE;
+FNAME  EMPLOYEES.FIRST_NAME%TYPE;
+CURSOR EMP_CURSOR IS
+SELECT EMPLOYEE_ID,FIRST_NAME 
+FROM EMPLOYEES 
+WHERE DEPARTMENT_ID := 30;
+
+BEGIN 
+	OPEN EMP_CURSOR;
+	  LOOP
+		FETCH EMP_CURSOR INTO EMP_ID,FNAME;
+		EXIT WHEN EMP_CURSOR%NOTFOUND;
+		DBMS_OUTPUT.PUT_LINE(EMP_ID ||' ' || FNAME);
+	  END LOOP;
+	
+	CLOSE EMP_CURSOR;		
+	
+	
+END;	
+
+---------------------
+CURSOR WITH FOR LOOP
+---------------------
+
+DECLARE 
+CURSOR EMP_CURSOR IS 
+SELECT EMPLOYEE_ID,FIRST_NAME FROM EMPLOYEES WHERE DEPARTMENT_ID=30;
+BEGIN 
+FOR EMP_RECORD IN EMP_CURSOR 
+	LOOP 	
+	DBMS_OUTPUT.PUT_LINE(EMP_RECORD.FIRST_NAME||' '|| EMP_RECORD.EMPLOYEE_ID); 		
+	END LOOP;
+END ;  
+
+-------------------------
+EXPLICIT CURSOR ATTRIBUTE :
+-------------------------
+
+%NOTFOUND --> BOOLEAN
+%ISOPEN  --> BOOLEAN
+%FOUND --> BOOLEAN 
+%ROWCOUNT --> INTEGER
+
+---------------------
+CURSOR WITH PARAMETERS 
+---------------------
+
+DECLARE 
+
+EMP_ID EMPLOYEES.EMPLOYEE_ID%TYPE;
+FNAME  EMPLOYEES.FIRST_NAME%TYPE;
+
+CURSOR EMP_CURSOR(DPT_NO NUMBER) IS 
+SELECT EMPLOYEE_ID,FIRST_NAME FROM EMPLOYEES WHERE DEPARTMENT_ID=DPT_NO;
+
+BEGIN
+OPEN EMP_CURSOR(30);
+  LOOP
+	FETCH EMP_CURSOR INTO EMP_ID,FNAME;
+	EXIT WHEN EMP_CURSOR%NOTFOUND;
+	DBMS_OUTPUT.PUT_LINE('------'||FNAME||' -->' || EMP_ID);
+  END LOOP;
+
+CLOSE EMP_CURSOR;
+END;
+-----------------------------------------------------------
+TO LOCK THE CURSOR WE COULD DO CURSOR  " FOR UPDATE OF "
+----------------------------------------------------------
+
+DECLARE 
+
+EMP_ID EMPLOYEES.EMPLOYEE_ID%TYPE;
+FNAME  EMPLOYEES.FIRST_NAME%TYPE;
+
+CURSOR EMP_CURSOR(DPT_NO NUMBER) IS 
+SELECT EMPLOYEE_ID,FIRST_NAME FROM EMPLOYEES WHERE DEPARTMENT_ID=DPT_NO for update of last_name nowait;
+
+BEGIN
+OPEN EMP_CURSOR(30);
+  LOOP
+	FETCH EMP_CURSOR INTO EMP_ID,FNAME;
+	EXIT WHEN EMP_CURSOR%NOTFOUND;
+	DBMS_OUTPUT.PUT_LINE('------'||FNAME||' -->' || EMP_ID);
+  END LOOP;
+
+CLOSE EMP_CURSOR;
+END;
+
+
+------------------------------------------------------------------------------------------
+
+VARIABLE LNAME VARCHAR2(20);
+
+BEGIN 
+SELECT LAST_NAME INTO :LNAME FROM EMPLOYEES 
+WHERE EMPLOYEE_ID=100;
+DBMS_OUTPUT.PUT_LINE(:LNAME);
+END;
+
+SET VERIFY OFF
+DEFINE LNAME=Urman;
+DECLARE 
+	FNAME VARCHAR2(20);
+BEGIN 
+	SELECT FIRST_NAME INTO FNAME FROM EMPLOYEES
+	WHERE LAST_NAME ='&LNAME' ;
+	DBMS_OUTPUT.PUT_LINE('FNAME-->'||FNAME);
+	
+END;	
+
+DECLARE 
+SALARY NUMBER(6) :=6000;
+SAL_HIKE VARCHAR2(5):='1000';
+TOTAL_SALARY SALARY%TYPE;
+BEGIN 
+TOTAL_SALARY :=SALARY + SAL_HIKE;
+DBMS_OUTPUT.PUT_LINE(TOTAL_SALARY);
+END;
+
+
+
+-----------------------
+
+
+DECLARE
+EMP_RECORD EMPLOYEES%ROWTYPE;
+BEGIN 
+SELECT EMPLOYEE_ID,FIRST_NAME,LAST_NAME,EMAIL,JOB_ID,SALARY  INTO EMP_RECORD
+FROM EMPLOYEES 
+WHERE EMPLOYEE_ID = &EMPLOYEEno;
+END;
+---------------------------------------------
+
+VARIABLE ROWS_DELETED VARCHAR2(30);
+DECLARE 
+ID_TRADE TRADE.ID%TYPE:=1;
+BEGIN 
+DELETE FROM TRADE 
+WHERE ID = ID_TRADE;
+:ROWS_DELETED :=(SQL%ROWCOUNT|| ' ROW DELETED.');
+END;
+/
+PRINT ROWS_DELETED;
+-----------------------------
+
+VARIABLE ROWS_SELECTED BOOLEAN:=FALSE;
+DECLARE 
+ID_TRADE TRADE.ID%TYPE:=2;
+TRADE_ROW TRADE%ROWTYPE;
+BEGIN 
+SELECT * INTO TRADE_ROW FROM TRADE 
+WHERE ID = ID_TRADE;
+:ROWS_SELECTED :=(SQL%FOUND || ' ROW FETECHED.');
+END;
+--------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE TRADE_PRO1(ID IN NUMBER) AS 
+BEGIN 
+	DBMS_OUTPUT.PUT_LINE(ID);
+
+END;
+
+----------------
+LOCAL PROCEDURE 
+----------------4506445220010s
+***** local procedure must be declared after all local variables in main procedure  ******                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              jag
+CREATE OR REPLACE PROCEDURE UPDATE_EMP (ID IN NUMBER) AS 
+	V_TECH NUMBER(8);
+	PROCEDURE CALC AS 
+	BEGIN 
+	DBMS_OUTPUT.PUT_LINE(ID);
+	END CALC;	
+	BEGIN 
+	CALC();
+END;
+-------------------------------------------------------------------------------------
+
+
+CREATE OR REPLACE PACKAGE TRADE_PACKAGE1 AS 
+	FUNCTION GETFNAME(id IN EMPLOYEES.EMPLOYEE_ID%type) RETURN EMPLOYEES.FIRST_NAME%TYPE;
+END TRADE_PACKAGE1;
+
+
+CREATE OR REPLACE PACKAGE BODY TRADE_PACKAGE1 AS 
+	FUNCTION GETFNAME(id IN EMPLOYEES.EMPLOYEE_ID%type) RETURN EMPLOYEES.FIRST_NAME%TYPE AS
+		FNAME EMPLOYEES.FIRST_NAME%TYPE;
+	BEGIN	
+		SELECT FIRST_NAME INTO FNAME FROM EMPLOYEES WHERE EMPLOYEE_ID=ID;
+		RETURN FNAME;
+	END GETFNAME;
+END TRADE_PACKAGE1;
+
+
+DECLARE FNAME EMPLOYEES.FIRST_NAME%TYPE;
+
+BEGIN 
+	FNAME := TRADE_PACKAGE1.GETFNAME(100);
+	DBMS_OUTPUT.PUT_LINE(FNAME);	  	
+END;
+
+
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE PACKAGE TRADE_PACKAGE1 AS 
+
+END TRADE_PACKAGE1;
+
+
+CREATE OR REPLACE PACKAGE BODY TRADE_PACKAGE1 AS 
+	FUNCTION GETFNAME(id IN EMPLOYEES.EMPLOYEE_ID%type) RETURN EMPLOYEES.FIRST_NAME%TYPE AS
+		FNAME EMPLOYEES.FIRST_NAME%TYPE;
+	BEGIN	
+		SELECT FIRST_NAME INTO FNAME FROM EMPLOYEES WHERE EMPLOYEE_ID=ID;
+		RETURN FNAME;
+	END GETFNAME;
+END TRADE_PACKAGE1;
+--------------------------------------------------------------------------------------------------------------
+

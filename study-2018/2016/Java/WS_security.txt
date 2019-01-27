@@ -1,0 +1,46 @@
+Encrption of WS messages.  The protocol to specify how integrity and confidentiality can be enforced on messages 	
+n genreal they are Interceptors that Traps request to SOAP messages to be authenticated.
+
+<bean id="wsSecurityInterceptor" class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
+        <property name="secureResponse" value="false"/>
+        <property name="policyConfiguration"
+                  value="classpath:securityPolicy.xml"/>
+        <property name="callbackHandler">
+            <bean class="org.springframework.ws.soap.security.xwss.callback.SpringPlainTextPasswordValidationCallbackHandler">
+                <property name="authenticationManager" ref="securityService"/>
+            </bean>
+        </property>
+    </bean>
+ 
+Spring: IT is an interceptor --> XWSSecurityInterceptor  that has some properties ==> CallBackHandler
+One of them is CallBackHandler that refrence the authenticationManager called SecurityService. This is the service that we implement to return Spring Authentication
+
+
+public class SecurityService implements AuthenticationManager {
+	private final Log log = LogFactory.getLog(this.getClass());
+	@Autowired(required=true)
+	WebkinzUserService webkinzUserService;
+	@Override
+	public Authentication authenticate(Authentication auth)
+			throws AuthenticationException {
+		log.info("Start Authentication : ");
+		if (auth != null) {
+        	String userName = auth.getName();
+        	if("dummyWebkinzUser".equalsIgnoreCase(userName)) {
+        		return auth;
+        	}
+        	String securityToken = auth.getCredentials().toString();
+        	if (webkinzUserService.isWebkinzeStoreUserValid(userName, securityToken)){
+        		log.info("END Authentication : " + userName + "validated");
+        		return auth;
+        	}else{
+        		throw new BadCredentialsException("Username/password doesn't not exist");
+        	}
+        }
+
+        return null;
+	}
+}	
+--------------------------------------------------------------------------------------------
+Rest Securrity 
+

@@ -1,0 +1,284 @@
+EJB 
+1. StateFull Session Bean: 	@Stateful
+	It will maintain a conversational state with a client. The state is mainatianed for the duration of conversation between client and stateful session bean.
+	When the client removes the session bean then Statefull session bean ends, and the state is destroyed.
+
+2. Stateless Session bean: @Stateless
+	It maintains states for the duration of Bean method invocation. after method has finished running successfully or unsunccessfully the state of all Its instance variables are dropped
+	EJB containter is handleing create() and remove() methods of the bean.
+
+3. Singleton Session Beans @Singlton
+
+    Instantiated once per application and exists for the lifecycle of the application.
+	Designed to be shared across and concurrently accessed by clients.
+
+	Offers Similar functionality to stateless  beans  but there is only one singleton session bean per application
+	Singleton  beans can implement web service endpoints.
+	 It should be instantiated upon application startup to perform initialization tasks or perform cleanup tasks on application shutdown
+
+	The Singleton is essentially  a Stateless bean with the pool size to be exactly 1,
+	There is  one instance of the Singleton bean which can be invoked concurrently by multiple threads like a servlet. 
+	It can do everything a Stateless can do such as support local and remote business interfaces, web services, security, transactions, and more. 
+	Additionally, the Singleton can have its 
+	@PostConstruct 
+		method called with the application starts up and its 
+	@PreDestroy 
+		method called when the application shuts down. 
+	
+	This allows it to serve as an application lifecycle listener which is something only Servlets could do before. 
+	It has an @Startup annotation which is similar in concept to the servlet ,
+	but unlike servlets it doesn't take a number as an argument. 
+	Instead, you can use an @DependsOn annotation to say which other Singletons you need and the container will ensure they start before you.
+
+
+	 
+3. Benefit of stateless session bean
+	Bean pooling  : 
+		EJB container pools the instance of steless beans, any instacne of stateless bean that is not currecntly invoked is available to be called by Container to service the client. 
+		This gives a hight performance.
+		
+	Scalability 
+		Typically to support the same number of clients, an application requires fewer stateless  beans than stateful benas. Stateless has less instances 
+		
+	Higher performance
+		An EJB container will never move a stateless session bean from RAM out to a secondary storage which it may do with a stateful therefore  so 
+		stateless session beans may offer greater performance than stateful
+
+	
+A stateless session bean can implement a web service, but a stateful session bean cannot.
+
+When to use Stateful  
+	
+	The bean needs to hold information about the client during method invocations. - save data for specific user
+	If the state of the bean represents the interaction between the bean and a specific client
+	A stateful session bean cannot implement web services 
+	
+
+When to use Stateless 
+
+	The bean’s state has no data for a specific client.
+	The bean performs a generic task for all clients in a single method invocation,For example stateless session bean used to send an email that confirms an online order.
+	If We want ti implemen t web services
+	
+	
+When to use Singlton 
+
+	State needs to be shared accross the application.
+	A single enterprise bean needs to be accessed by multiple threads concurrently.
+	The application needs  to perform tasks upon application startup and shutdown.
+
+Strategies
+
+	Stateless Session Façade Strategy
+	
+Consequences
+
+	Introduces a layer that provides services to remote clients
+	Exposes a uniform coarse-grained interface
+	Reduces coupling between the tiers
+	Promotes layering, increases flexibility and maintainability
+	Reduces complexity
+	Improves performance, reduces fine-grained remote methods
+		Fine grained methods tend to be small and modular like setName()
+		Coarse grained methods tend to be in accomplish several steps. like SaveOrder(), validate(),data entry,email and etc
+	Centralizes security management
+	Centralizes transaction control
+	Exposes fewer remote interfaces to clients	
+
+
+What is Transaction attribute ?  @TransactionAttributeType
+	It is  enum TransactionAttributeType that is  used with the @TransactionAttributeType 
+	to specify whether the methods of a session bean or message driven bean are called with a valid transaction 	
+	context.
+			
+    REQUIRED : (EJB 3 default)
+	
+		if bean 1() is called then T1 is created. if Bean1() called Bean2() the EBJ containter creates new T2 for the second call regardless T1 transaction is failed or commit.
+		bean1() and bean2() won't share the transaction.
+		If your method in a  bean needs to be completed without being affected by either commit or rollback from the calling session bean, REQUIRES_NEW is the way to go.
+		Scenario:
+        Login process with money transfere regardless if this transfer is successful or not (with a rollback), the logging facility would still need to be functional to log the status of 
+		the transaction and it must not be affect by the rollback of the transfer. - 
+	
+	
+	MANDATORY:
+		Specifies that  the second methodB() will run its operation within the same transaction as methodA(). they both share the transction. usually the first one  methjodA() is acconated "required"  and 
+		the MethodB() is MANDATORY
+		
+	NOT_SUPPORTED
+
+	Are  non-transactional and will not participate in any existing transactions
+	It won’t throw an error whether if it is within a transaction or not, but it just won’t participate in a transaction 
+
+	if Method1() runs on T1 and calls Method2(NOT_SUPPORTED) then method2() will neither ride on T1 nor will it start its own transaction. It will simply suspend T1 or whatever transaction that the external
+    invoker has, execute its individual contents, only then the transaction T1 will be resumed after that.
+
+	SUPPORTS
+
+	If calling method has no Transaction already open then SUPPORT method opens one otherwise Method2(SUPPORTS) will run in a same transaction as the  calling method. 
+	TransactionAttributeType.SUPPORTS on methods that query objects which the underlying data is consistently updated (constantly changing) and would always be involved in other transaction methods that carries Transaction 
+	Attribute Types like REQUIRED, MANDATORY or REQUIRES_NEW.
+	
+	 
+	 NEVER 
+	 Annotated with NEVER means never involved in any Transaction
+	 I’ll annotate session bean methods with NEVER if they are only specifically involve in physical file reading and writing 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EJB Web service
+
+EJB 3.X  - By Wrapping  EJB in web Service interface  we can have EJB web services 
+
+We annotate  Remote interface method by @WebMethod  to specify that this method is EJB web services web services. we are going to pass our paramater by @webparam
+
+@Remote
+@WebService(name = "CRMRetrieveService")
+public interface CRMRetrieveWS extends Serializable{  
+    @WebMethod
+    StatusFormResponse status(@WebParam String enrolmentId);    
+}
+
+@Stateless
+@Local
+@WebService(name = "CRMRetrieveService")
+public class CRMRetrieveWSBean implements CRMRetrieveWS {
+
+    @WebMethod
+    public @WebResult(name = "statusFormResponse")
+	StatusFormResponse status(@WebParam(name = "enrolmentId") String enrolmentId) {
+
+	}
+1. we deploy EJB then get the wsdl file from aplication server console copy that in to CLient side and then with Maven we genertae request and response object of wsdl at run time
+
+
+
+Difference between EJB 3 and EJB 2 
+
+1. Annotations makes EJB 3.0 a latest technology while the EJB 2.0 has home and remote interfaces instead of annotations
+2. EJB 3.0 has Java Persistence API  JPA but EJB 2  deploys entity beans for DB access.
+3. EJB 3.0 uses POJOs along with metadata annotation, while EJB 2 uses  XMLDescriptor and JNDI deployed by EJB 2.0 for reference of objects. EJB 2.0 does not implement POJO.
+4. EJB 2.0 is heavy when it comes to writing home and remote interfaces. EJB 3.0 has no restriction on using any of the standard interfaces. It is a well configured and simple POJO
+   which doesn’t need to execute container callback methods such as ejbActive, ejbStore, etc which are used by EJB 2.0.
+
+   
+@Stateless
+@DeclareRoles({"student" "librarian"})
+public class LibraryBean implements LibraryRemote {
+   @RolesAllowed({"librarian"})
+   public void delete(Book book){
+	  //delete book
+   }
+   
+   @PermitAll
+   public void viewBook(Book book){
+      //view book
+   }
+
+   @DenyAll
+   public void deleteAll(){
+      //delete all books
+   } 
+}
+
+   
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Web Services and SOAP 
+Is a software system that is desgined to support machine to machine synch intraction over the NET.
+
+SOAP:   (Simple object access Control)
+It is message simple XML based protocol to exchnage information over HTTP. SOAP messages are independent of any OS or application and transported by variety of protocols like HTTP,MIME, SMTP
+	
+JAXB
+Java Architecture for XML Binding (JAXB)
+The ability to marshal Java objects into XML and the inverse,  unmarshal XML back into Java objects.
+In other 
+
+JAXP
+The Java API for XML Processing, or JAXP (pronounced jaks-p),  It provides the capability of validating and parsing XML documents.
+
+
+XSLT: 
+XML style sheet and Transformation :   To transofrm XML in to plain HTML  we are using XSLT 
+	
+
+JAX-RPC :
+Allows a client Java application to invoke a Java-based Web Service with a known description
+
+JAX-WS 2.0
+The JAX-RPC name is misleading, developers assume that all JAX-RPC is about is just RPC, 
+not Web Services. By renaming JAX-RPC to JAX-WS we can eliminate this confusion. 
+
+
+WSDL 
+-----
+WSDL (Web Services Description Language)  is an XML-based language for describing Web services and how to access them.
+contains a set of tags to describe request and response format
+
+The document describes a Web service. 
+It specifies the location of the service and the operations (or methods) that privides the services
+  
+ An XML-formatted language used to describe a Web service's capabilities as collections of communication 
+endpoints capable of exchanging messages. WSDL is an integral part of UDDI, an XML-based worldwide business registry.
+WSDL is the language that UDDI uses. WSDL was developed jointly by Microsoft and IBM. 
+	
+
+Web service Security : 
+
+Encrption of WS messages.  The protocol to specify how integrity and confidentiality can be enforced on messages 	
+
+In genreal they are Interceptors that Traps request to SOAP messages to be authenticated.
+<bean id="wsSecurityInterceptor" class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
+        <property name="secureResponse" value="false"/>
+        <property name="policyConfiguration"
+                  value="classpath:securityPolicy.xml"/>
+        <property name="callbackHandler">
+            <bean class="org.springframework.ws.soap.security.xwss.callback.SpringPlainTextPasswordValidationCallbackHandler">
+                <property name="authenticationManager" ref="securityService"/>
+            </bean>
+        </property>
+    </bean>
+ 
+Spring: IT is an interceptor --> XWSSecurityInterceptor  that has some properties ==> CallBackHandler
+One of them is CallBackHandler that refrence the authenticationManager called SecurityService. This is the service that we implement to return Spring Authentication
+
+
+public class SecurityService implements AuthenticationManager {
+	private final Log log = LogFactory.getLog(this.getClass());
+	@Autowired(required=true)
+	WebkinzUserService webkinzUserService;
+	@Override
+	public Authentication authenticate(Authentication auth)
+			throws AuthenticationException {
+		log.info("Start Authentication : ");
+		if (auth != null) {
+        	String userName = auth.getName();
+        	if("dummyWebkinzUser".equalsIgnoreCase(userName)) {
+        		return auth;
+        	}
+        	String securityToken = auth.getCredentials().toString();
+        	if (webkinzUserService.isWebkinzeStoreUserValid(userName, securityToken)){
+        		log.info("END Authentication : " + userName + "validated");
+        		return auth;
+        	}else{
+        		throw new BadCredentialsException("Username/password doesn't not exist");
+        	}
+        }
+
+        return null;
+	}
+}	
+		
+		
+		
+		
+		
+		
+    
+		
+	
+
+
+

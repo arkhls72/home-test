@@ -1,0 +1,81 @@
+Spring Security : 
+ 
+ STEP 1 
+ 1. Create an account DAO class that holds userId and password 
+ 
+ public class Account {
+  
+  @Id
+  private String id;
+  private String username;
+  private String password;
+}
+
+Step 2
+Create WebSecurityCOnfig that extends WenSecurityCOnfigurerAdaptor to configure what type of Authentication we have 
+
+
+@EnableWebSecurity
+@Configuration
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+ 
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.authorizeRequests().anyRequest().fullyAuthenticated().and().
+    httpBasic().and().
+    csrf().disable();
+  }
+  
+}
+
+
+3. create  WenSecurityConfig that extends GlobalAuthenticationConfigureAdaptor
+Initial validate upcoming request user ID
+
+@Configuration
+class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+
+  @Autowired
+  AccountRepository accountRepository;
+
+  @Override
+  public void init(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userDetailsService());
+  }
+
+  @Bean
+  UserDetailsService userDetailsService() {
+    return new UserDetailsService() {
+
+      @Override
+      public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Account account = accountRepository.findByUsername(username);
+        if(account != null) {
+        return new User(account.getUsername(), account.getPassword(), true, true, true, true,
+                AuthorityUtils.createAuthorityList("USER"));
+        } else {
+          throw new UsernameNotFoundException("could not find the user '"
+                  + username + "'");
+        }
+      }
+    };
+  }
+}
+
+  
+  Step 4 
+  The last step is we need to map the springSecurityFilterChain. 
+  
+  <filter>
+	<filter-name>springSecurityFilterChain</filter-name>
+	<filter-class>
+		org.springframework.web.filter.DelegatingFilterProxy
+	</filter-class>
+</filter>
+
+<filter-mapping>
+  <filter-name>springSecurityFilterChain</filter-name>
+  <url-pattern>/*</url-pattern>
+  <dispatcher>ERROR</dispatcher>
+  <dispatcher>REQUEST</dispatcher>
+</filter-mapping>
