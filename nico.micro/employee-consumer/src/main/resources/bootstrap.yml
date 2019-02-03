@@ -1,0 +1,10 @@
+spring:
+   cloud:
+      config:
+         name:  employee-consumer           
+         discovery:              
+             enabled: true
+             service-id: config
+   application:
+        name: employee-consumer
+  
