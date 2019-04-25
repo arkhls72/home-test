@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ###################################################################### -->
+<!-- Service Adapter Context -->
+<!-- Copyright 2015 home All Right Reserved -->
+<!-- ###################################################################### -->
+
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+     	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+     	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	<!-- Remote service adapter configuration -->
+	<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	<bean id="gradsOfiValidationServiceAdapter" class="com.home.digital.adapter.local.ims.gradsofivalidation.GradsOfiValidationServiceAdapter" />
+	<bean id="gradsOfiValidation" class="com.home.digital.adapter.local.ims.gradsofivalidation.GradsOfiValidationImpl" />
+	<bean id="imsClient" class="com.home.digital.adapter.local.ims.common.ImsClient" />
+	
+	<bean id="imsMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="contextPath" value="com.home.digital.adapter.local.ims" />
+	</bean>
+	
+	<bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+		<property name="marshaller" ref="imsMarshaller"/>
+		<property name="unmarshaller" ref="imsMarshaller"/>
+	</bean>
+
+	<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	<!-- SOAP endpoint configuration in zOS DEV environment                     -->
+	<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	<context:property-placeholder location="classpath:remote-adapter-test.properties" />
+
+</beans>

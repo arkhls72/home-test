@@ -1,0 +1,10 @@
+/**/target/
+/**/.settings/
+/**/.classpath
+/**/.project
+/**/.metadata
+
+/**/digital-model/src/main/java/*.xml
+/**/digital-model/src/main/java/com/home/digital/model/**
+
+/doc/
