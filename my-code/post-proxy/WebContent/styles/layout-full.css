@@ -1,0 +1,64 @@
+/*
+styling to layout the application as follows:
+
+- full screen width
+- full screen height
+- header container row
+- one column content container (body only)
+- footer container row
+*/
+body {
+}
+
+.pageContainer {
+	margin: auto;
+}
+
+.row {
+	left: 0;
+	right: 0;
+}
+
+.col {
+	top: 0;
+	bottom: 0;
+}
+
+.row,.col {
+	position: absolute;
+	overflow: hidden;
+	width: 100%;
+	/* may be adjusted if header is moved up */
+	min-width: 750px;
+}
+
+.scroll-x {
+	overflow-x: auto;
+}
+
+.scroll-y {
+	overflow-y: auto;
+}
+
+.headerContainer.row {
+	height: 60px;
+	top: 0;
+/* 	border: 1px solid black; */
+}
+
+.contentContainer.row {
+	top: 60px;
+	bottom: 30px;
+/* 	border: 1px solid black; */
+}
+
+.contentBodySection {
+	width: 100%;
+/* 	border: 1px solid black; */
+}
+
+.footerContainer.row {
+	height: 30px;
+	bottom: 0;
+/* 	border: 1px solid black; */
+}

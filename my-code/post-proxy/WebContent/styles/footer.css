@@ -1,0 +1,24 @@
+/*
+styling to layout the footerSection 
+*/
+.footerContainer {
+	border-collapse: collapse;
+}
+
+.footerSection {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: #99CCFF;
+}
+
+.footerItem {
+	text-align: center;
+	font: 11px arial, sans-serif;
+	position: relative;
+	top: 8px;
+	/* 	left: 0; */
+	/* 	right: 0; */
+	/* 	bottom: 0; */
+	/* border: 1px solid black; */
+}

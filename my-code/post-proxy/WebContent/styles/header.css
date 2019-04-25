@@ -1,0 +1,181 @@
+/*
+styling to layout the headerContainer as follows:
+
+- logo left full height
+- Login/Logout links top right
+- application navigation bottom left
+*/
+.headerContainer {
+	width: 100%;
+	height: 100%;
+	border-collapse: collapse;
+	background-color: #99CCFF;
+	font: 12px arial, sans-serif;
+	/* 	border: 1px solid black; */
+}
+
+.headerLogoSection {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 200px;
+	bottom: 0;
+	/* 	border: 1px solid black; */
+}
+
+.headerLogoItem {
+	height: 100%;
+/*   	background-image: url('../images/acme-mgmt-console.png'); */
+  	background-image: url('../images/acme-bank.png');
+	background-repeat: no-repeat;
+	background-position: center;
+/* 		border: 1px solid black; */
+}
+
+.headerUserSection {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 10px;
+	text-align: right;
+/* 	border: 1px solid black; */
+}
+
+.headerUserItem {
+	width: 250px;
+}
+
+.headerMenuSection {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	/* 	border: 1px solid black; */
+}
+
+.headerMenuItem ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.headerMenuItem li {
+	float: left;
+}
+
+/* required for traditional links only
+.headerMenuItem a:link,.headerMenuItem a:visited {
+	display: block;
+	width: 100px;
+	text-align: center;
+	padding: 4px;
+	text-decoration: none;
+	text-transform: uppercase;
+	color: #ffffff;
+	background-color: #79bbff;
+}
+
+.headerMenuItem a:hover,.headerMenuItem a:active {
+	font-weight: bold;
+	color: #F0F0F0;
+	background-color: #4197ee;
+}
+*/
+
+.menuButton {
+	-moz-box-shadow: inset 0px 1px 0px 0px #cae3fc;
+	-webkit-box-shadow: inset 0px 1px 0px 0px #cae3fc;
+	box-shadow: inset 0px 1px 0px 0px #cae3fc;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #4197ee));
+	background: -moz-linear-gradient(center top, #79bbff 5%, #4197ee 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#4197ee');
+	background-color: #79bbff;
+	-webkit-border-top-left-radius: 0px;
+	-moz-border-radius-topleft: 0px;
+	border-top-left-radius: 0px;
+	-webkit-border-top-right-radius: 0px;
+	-moz-border-radius-topright: 0px;
+	border-top-right-radius: 0px;
+	-webkit-border-bottom-right-radius: 0px;
+	-moz-border-radius-bottomright: 0px;
+	border-bottom-right-radius: 0px;
+	-webkit-border-bottom-left-radius: 0px;
+	-moz-border-radius-bottomleft: 0px;
+	border-bottom-left-radius: 0px;
+	text-indent: 0;
+	border: 1px solid #469df5;
+	display: inline-block;
+	color: #ffffff;
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	font-style: normal;
+	height: 25px;
+	line-height: 24px;
+	width: 90px;
+	text-decoration: none;
+	text-align: center;
+	text-shadow: 1px 1px 0px #287ace;
+}
+
+.menuButton:hover {
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #4197ee), color-stop(1, #79bbff));
+	background: -moz-linear-gradient(center top, #4197ee 5%, #79bbff 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4197ee', endColorstr='#79bbff');
+	background-color: #4197ee;
+}
+
+.menuButton:active {
+	position: relative;
+	top: 1px;
+}
+
+/*
+.tabButton {
+	-moz-box-shadow:inset 0px 1px 0px 0px #bee2f9;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #bee2f9;
+	box-shadow:inset 0px 1px 0px 0px #bee2f9;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #63b8ee), color-stop(1, #468ccf) );
+	background:-moz-linear-gradient( center top, #63b8ee 5%, #468ccf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#63b8ee', endColorstr='#468ccf');
+	background-color:#63b8ee;
+	-webkit-border-top-left-radius:12px;
+	-moz-border-radius-topleft:12px;
+	border-top-left-radius:12px;
+	-webkit-border-top-right-radius:12px;
+	-moz-border-radius-topright:12px;
+	border-top-right-radius:12px;
+	-webkit-border-bottom-right-radius:0px;
+	-moz-border-radius-bottomright:0px;
+	border-bottom-right-radius:0px;
+	-webkit-border-bottom-left-radius:0px;
+	-moz-border-radius-bottomleft:0px;
+	border-bottom-left-radius:0px;
+	text-indent:0;
+	border:1px solid #3866a3;
+	display:inline-block;
+	color:#14396a;
+	font-family:Arial;
+	font-size:12px;
+	font-weight:bold;
+	font-style:normal;
+	height:30px;
+	line-height:30px;
+	width:100px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #7cacde;
+}
+
+.tabButton:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #468ccf), color-stop(1, #63b8ee) );
+	background:-moz-linear-gradient( center top, #468ccf 5%, #63b8ee 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#468ccf', endColorstr='#63b8ee');
+	background-color:#468ccf;
+}
+
+.tabButton:active {
+	position:relative;
+	top:1px;
+}
+*/

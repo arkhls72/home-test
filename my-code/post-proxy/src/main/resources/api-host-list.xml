@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config:apiHostList xmlns:config="http://digital.home.com/model/core/config">
+	<config:apiHost>
+		<api>acme-api</api>
+		<hostname>http://localhost:8082</hostname>
+	</config:apiHost>
+	<config:apiHost>
+		<api>cds-api</api>
+		<hostname>https://ulvsamsd01.devfg.home.com:8443</hostname>
+	</config:apiHost>
+	<config:apiHost>
+		<api>kai-api</api>
+		<hostname>https://ulvsamsd01.devfg.home.com:8443</hostname>
+	</config:apiHost>
+</config:apiHostList>
