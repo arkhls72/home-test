@@ -1,0 +1,36 @@
+<configuration scan="true">
+
+	<!-- ======================================== -->
+	<!-- Appenders -->
+	<!-- ======================================== -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<!-- <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern> -->
+			<pattern>%-5level %logger{36} - %msg%n</pattern>
+			<!-- <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern> -->
+		</encoder>
+	</appender>
+
+	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+         <file>${jboss.server.log.dir}/relay-rest.log</file>  
+	 
+		<!-- <append>false</append> -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily roll over -->
+			<fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>1</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<logger name="com.home.digital" level="info" />
+	<root level="INFO">
+		<appender-ref ref="console" />
+		<appender-ref ref="file" />
+	</root>
+</configuration>
