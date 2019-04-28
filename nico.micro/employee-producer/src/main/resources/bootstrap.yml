@@ -1,9 +1,0 @@
-spring:
-   application:
-        name: producer-service
-   cloud:
-      config:
-         name: producer-service           
-         discovery:              
-             enabled: true
-             service-id: config   
