@@ -1,0 +1,94 @@
+Authentication:
+		The process of confirming  user identity is called Authentication. 
+
+    REST API Autnetocatopn security : 
+
+		1. Basiec Auth 
+			It is baseic, we endode user name and password in requestheader and  then server-side will validate the cridential in filter chain or intercepter
+
+		2. Oauth 1
+			The protocol uses signatire wich often is HMAC to comboned token nonce and other request based information 
+			provides 2 tokens : Access and Refresh token
+			Access token will expired soon but refresh token will get new access token
+		
+		4. JWT 
+			Jason web token;  JWT has 3 sections : 
+				 Header	
+					It describes the token vontain methadata about 
+					
+				 payload (Claim)
+							Who this person is ?
+							What this person can access?
+							When the token is expired
+					
+				 Signature 
+					Hashcode to verify integrity of the token
+	 
+				var headers = base64URLencode(myHeaders);
+				var claims = base64URLencode(myClaims);
+				var payload = header + "." + claims;
+				 
+				var signature = base64URLencode(HMACSHA256(payload, secret));
+				 
+				var encodedJWT = payload + "." + signature;	 
+				
+				
+				
+				
+				
+3. OAuth 
+
+ It is framework it is not token format 
+ It details how multiple different roles, users in your system, server side apps like an API, and clients such
+ as websites or native mobile apps, can authenticate with each other.
+ 
+Roles : 
+	Both applications and users can be one of the following:
+	
+	Resource Owner
+	Resource Server
+	Client Application
+	Authorization Server	
+	
+Client Types
+	A client is something that consumes your API. IT can be one of the following two types:
+
+	Confidential
+	Public
+	
+	
+Client Profiles
+	There are also client profiles specified by the framework, that describe the kind of application type. They can be:
+
+	Web Application	
+	User Agent
+	Native
+	
+	
+Authorization Grants
+	An authorization grant is a set of permissions given by the resource owner to a client application. They can take the following forms:
+	
+	Authorization Code
+	
+	Implicit
+	
+	Resource Owner Password Credentials
+	
+	Client Credentials
+
+Endpoints
+	In order for all of us this to work the following endpoints are required:
+
+	Authorization Endpoint
+	Token Endpoint
+	Redirection Endpoint
+		
+
+
+SAML 
+Exchanging authentication and authorization data between security domains called SAML is as part of SSO
+
+
+Difference between Authentoicationin REST and SOAP : 
+
+WS-Security offers more protection than HTTPS would, and SOAP offers a richer API than REST

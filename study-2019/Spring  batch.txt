@@ -1,0 +1,31 @@
+
+Springbatch 
+
+Has 3 sections 
+
+1. ItemReader : read the item
+2. ItemProcessor process the item
+3. ItemWriter  wite the item
+4. ThreadPoolTaskExecuter
+
+Job repositories  responsible of the storing and updating of metadata information related to Job instance executions and Job contexts.
+Spring stores as metadata information about their executions, the results obtained, their instances, the parameters used for the Jobs executed and the 
+context where the processing runs.
+
+1.Listener: Class JobExecutionListenerSupport provides after/before job has been executed with full report.
+ThrottleLimit: maximum number  of concurrent tasklet executions allowed
+
+Core pool size:  will  tells that pool executor will start with N number of threads
+throttle-limit  limits the core pool size , no matter how many threads 
+
+Type of Spring bacth processing :
+1. Multithread steps- single process   same step runs, ItemReader,ItemWriter and process will be in paralel
+	
+2. Parallel Steps (single process) : different steps run in paralel. split steps using flow
+
+3. Partitioning a Step (single or multi process): 
+  Partition Steps and execute them remotely. The remote instances are Steps.
+  
+Repeat Templates: 
+Implementation of the RepeatOperations It contains basic functionalities and default behavior for 
+error handling and finalization mechanisms. Applications that do not want this default behavior should implement their custom Completion Policies.  

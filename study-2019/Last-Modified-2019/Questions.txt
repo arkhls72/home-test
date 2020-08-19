@@ -1,0 +1,472 @@
+-----------------------------------
+HTTPS , SSL 
+-----------------------------------
+1. What is HTTPS?
+2. What is SSL ? what kind of SSL ?
+3. what is a root SSL certifiate?
+
+4. Steps to create SSL layer ? 
+5. what is CA_certificate
+6. How to set it up in Server side?
+7. How to set up in client side?
+
+---------------------------------------
+---------------  JVM 
+---------------------------------------
+
+1.  What is JVM? 
+2.  what does JVM do ? 
+
+3.  what is JRE ? 
+4.  what does include JRE ? 
+5.  What is JDK ? 
+6   what kind of memeory JVM usues ? 
+7.  what is Heap memory ? 
+8.  what is Stack memroy?
+9.  Differcen between stack and heap
+10. How to check the dump error in JVM
+
+11. what is Classloader Hierarchy?
+12. what is the responsibility of ClassLoader hierrarachy?
+13. What is bootstrap classLoader?
+14. what is extension classloader?
+15. what is System classloader ? 
+
+
+------------------------
+Authentication 
+-------------------------
+
+1. What is authentication ? 
+2. What is Oauth ? 
+3. What are the Ouath grant type 
+4. what SSO ? 
+5. Differnce between Ouath 2 and 1 
+
+
+1.   What is Oauth ? 
+1.   what kind of Authenticatin we have ? 
+2.   What is Basic Auth ?
+3.   What is Oauth 1?
+4.   What is JWT ? 
+5.   What is Oaut 2 ? 
+6.   How we validate the recieved token JWT ?
+7.   how JWT works ? 
+8.   JWT contains what ? 
+9.   what is JWT encoding ? 
+
+10.  difference between Authentication in SOAP and REST ?
+
+11.  how to authenticate a soap request ? 
+13.  How to authenticate REST request?
+
+https://stormpath.com/blog/oauth-is-not-sso
+https://dzone.com/articles/saml-versus-oauth-which-one
+---------------------------
+WEB Services
+---------------------------
+1.  what is SOAP web services?
+
+2.  Component of WebServices ?
+
+3.  What is UDDI ?
+
+3.  What is SOAP ? 
+
+    What is WSDl?
+	
+4.  what JAXB ? 
+
+5.  What is JAXP ? 
+
+6.  What is XSLT ? 
+
+7.  What is DOM ? 
+
+8.  What is SAX ? 
+
+9.  What is JAX-WS ?
+
+10. What is SOAP handler? 
+
+11. Security level in WS? 
+
+12. what is message level security in WS servcesi? 
+
+13. Explain how we handle security in message level?
+ 
+14  what Spring offers for message level authentication?
+
+15  what spring offers in server side ? 
+
+16  what spring offers in client side ? 
+
+17  difference between Authentication in SOAP and REST ?
+
+----------------
+REST 
+----------------
+
+1. what is REST ? 
+2. what are the REST APIs are idempotent ? 
+3. what are the rest APIs are not idempotent?
+4. What is PATCH method do ?
+5. what is OPTION method do ? 
+6. what is the response of OPTION request ? 
+7. what is API versioning ?
+8. Differene between REST and SOAP?
+9. what is Head and why we use?
+10. what is CORS-ORIGIN 
+11. a typical Rest Controller has what ? 
+
+--------------------------------------------------------------
+----------        Micro-services , Spring Cloud  -------------
+--------------------------------------------------------------
+
+1.   what is micro-service architecure ? 
+2.   how domain are splitt in Micro-services?
+3.   what kidn of design is bounded context?
+4.   What are the modules in Micro-services?
+5.   What is discovery server?
+6.   How is gateway ? 
+7.   what is config server ? 
+8.   How config sever would be available? 
+9.   How muciroservices find the instance of other services ?
+10.  How to create multiple instance of the same micor-services?
+10.  what is discovery server type ? 
+11.  What is Eurika ?
+12.  What is Ribbon ? 
+13.  What is cicuit breakerr ? 
+14.  what is Hystrics ?
+	 https://console.bluemix.net/docs/java-spring/fault_tolerance.html#tolerance
+
+15.  how to achieve fault tolerance?
+17.  how we handle distributed transaction in Micro-services? 
+18.  how 2 phase commit ? 
+19.  what kidn of Saga we have? 
+20.  what is Ochestration? 
+21.  what is chroography?
+22.  How we scale Micro-services?
+23.  name few apps that handle Micro-services moniroting?
+24.  How to health check the Micro-services ? 
+25.  What is cross cutting pattern ? 
+26.  What is distributed tracing pattern ? 
+27.  How to achieve fault tolorence?
+28.  The best fault tolorance in the market?
+29. 
+-----------------------------------------------------------------
+Cloud
+-----------------------------------------------------------------
+1. what is cloud? 
+2. What is the element of Cloud ? 
+
+-----------------------------------------------------------------
+Transaction
+-----------------------------------------------------------------
+1.  What is Transaction ? 
+2.  What is Transaction boundry? 
+3.  Example of Transactional boundry?
+4.  Transactional Database?
+5.  What is Atomic?
+6.  What is Durability?
+7.  What is Consistency? 
+8.  Transaction management?
+9.  what is Transaction Propegation?
+10. What is physical transaction ? 
+11  What is logical transaction?
+12. What is Transaction propegation type ?
+13. what is distinct logical transaction ?
+14. methdoA(REQUIRED) calls methodB(REQUIRD_NEW) what happens if method A failed ? 
+15. methdoA(REQUIRED) calls methodB(REQUIRD_NEW) what happens if method B failed ? 
+16. What is SUPPORTED propagation? 
+17. what is NOT_SUPPORTED propagation? 
+18. What is NEVER ? 
+19. What is ISOLATION?
+20. what is ISOLATOIN level?
+20. What is Transaction locking?
+21. What are the lock mode in locking? 
+22. What is default lock mode in Oracle?
+23, What is default lock mode in SQL server? 
+24. What is ddefault lock mode in Postrgres?
+25. What id efault  lock mode in  Spring?
+26. what is databse deadlock ? 
+
+27. tips to avoid database deadlock?
+
+https://documentation.red-gate.com/sm3/troubleshooting/technical-questions/how-do-i-reduce-deadlocks
+https://docs.oracle.com/javadb/10.6.2.1/devguide/cdevconcepts28436.html
+
+-----------------------------------------------------------------
+JAVA 
+-----------------------------------------------------------------
+1.  What is Annotation?
+2.  What is Reflectoin?
+3.  What is Java collection ? 
+4.  what are object in Java collection ?
+5.  what is List?
+6.  what is Set? hashSet? TreeSet
+7.  what is Map? HashMap? TreeMap? HashTable? 
+8   what is Binary search? 
+9.  Difference between ArrayList and LinkedList?
+10. Differnce between Hashmap and TreeMap and HashSet?
+11. How to synchornized collections in Java ? 
+11. How to sort a list? 
+12  what is comparable ? 
+13. what is comperator?
+14  what is Enum set ? 
+15. is HashMap ordered ?
+16. Is List order ? 
+17. is Set order ?
+18. how to sort List? 
+19. How to sort Set?
+20. How to sort Map by key?
+21. How to sort Map by value?
+
+22. How to remove object from List?
+
+
+23. List a Java pattern you are familier?
+
+24. What is Singlton pattern?
+https://www.journaldev.com/1377/java-singleton-design-pattern-best-practices-examples
+
+25. What is facade pattern ? 
+
+26. What is factory pattern? 
+
+27. What is strategy pattern?
+
+28. What is decorating design pattern? 
+
+29. what is proxy pattern ? 
+
+29. What is Thead?
+practice example of Threading ? 
+
+30 what is ExecuterServic? 
+30 what is isTermonate() ?
+30. what is isShutodwn() ?
+
+30. What is Concurrency in Java?
+
+31. How to program thead programming? 
+
+32. How to pass parameter to run method in runnab]le?
+
+32. What is the scope of the compment in Spring that implemenets Runnable?
+
+33. how to ruturn the object back from Runnable method ? 
+
+34. Difference between tread.start() ane execure run()
+
+35. What is synchronization?
+
+36. difference beet Synchroniing in method level or block of code?
+
+37. what is Volatile? 
+
+38. What is Atomic operation in Java? 
+
+39. What are the atomic data type? 
+
+40. What is ThreadLocal ?
+
+41. How to avoid deadlock in thread?
+
+42. How to make object thread safe? 
+
+43. How  we should use synchronization?
+
+44. How is synchronization of method parameter?
+
+45. wait() , nothify() and notifyAll() are in what class ? 
+
+45. How to reverse an string in object? 
+
+46. some  cause of Memroy leak? example of 6 scenarios
+
+47. Whihc one is faster ? Array or List ? why ?
+
+48. difference between Java 7 and 8 ? 
+
+49. Whihc one is faster old for loop or Java 8 forloop stream ?
+
+50. What is opetional? 
+
+51. Atomic interger?
+
+52  difference between java 8 and 7 ? 
+
+53. What is Adapter pattern
+
+54. What is Optional ?
+
+55. what is System class ? 
+
+56. What is Container in Java ?
+
+67 what is Systemclass ?
+
+68. what is Iterator?
+
+69. what is Enum ?
+
+70. equal() and hashCode () 
+
+71. what is Finalized ()?
+
+72. How to process very larg size of the file?
+
+
+ 
+---------------------------------------------------------------
+-----------
+spring boot
+-----------
+
+1. What is Spring boot?
+2. what are the optiosn for secutity in Spring boot? 
+3. how we configure Spring boot secutrity ? 
+4. what webSecurityConfigurereAdapter provides ? 
+5. what accnotation runner we are using for Spring boot test?  SrpingRunner.classLoader
+6. what SpringBootTest we are using ? 
+7. what is MockMVC ?
+8. Difference between Spring boot and Cloud?
+9. how handle Exception in springboot? 
+
+---------------------------------------------------------------
+
+SPRING framework
+-----------------
+1.  What are the component of Spring framwork?
+2.  what is Spring Context ? 
+3.  What is contextLoad listener?
+4.  What is AOP ? 
+5.  Advantage of Spring framework.
+6.  what is dependecy injection in Spring framework?
+7.  What are the Scope of beans in Spring framework?
+8.  What is bean factory in Spring?
+9.  How we change the locale ?
+10. what is lazy initializatio?
+11. What is CustomScopeConfigurer ?
+12. What we need to have Security in Spring? 
+
+-----------------------------------------------
+
+-------------------------------------------------
+-------------  SPRING MVC framework -----------------
+-------------------------------------------------
+1. Structure of Spring-MVC framework?  
+
+2. what comes in WEB.XML ?
+
+3. what comes in springConig-mvx.xml?
+
+4. What comes in SpringConfig.xml ?
+
+5. What is difference between Model,ModelMAp and ModelAndView ?
+
+
+
+
+
+
+----
+EJB
+---- 
+1. what is Statefull Bean?
+2. What is Stateless bean?
+3. What is singlton bean? 
+4. why ar ewe using Singlton bean ? 
+5. what is @postConstruct and @predestroy ?
+6. What is JMS?  
+7. what is MDB? 
+8. advantage of JMS messaging ?
+9. What is Apache ActiveMQ ? 
+
+------------------------------------------------------
+--------------------  Hibernate  --------------------- 
+------------------------------------------------------
+
+1. What is Hibernate ? 
+2. What is ORM?  
+3. Hibernate objects?   
+4. what is sessionFactory?
+5. IS sessionfactory thread safe?
+6. advantage of detached object ? 
+7. difference between load and get ?
+8. is session object thread safe ? 
+9. Dirrence between session.save() and session.persist()?
+10 Difference between Hibernate and JDBC ?
+11. difference between session flush() and session.refresh()
+12. lazy fetching ?
+13. what is Criteria and projectoion ? 
+14. what is c3p0.max_size  ?
+15. what is first level cache ? 
+16. what is second level cache ?
+17. what is Ehcache ?
+18. How to call Storeprocedures in Hibernater opr JPA ? 
+
+
+---------------------------------------------------------
+-------------------     JPA  ----------------------------
+---------------------------------------------------------
+1.  What is JPA ?
+2.  Entity Manager ? 
+3.  How Entity manaher related to Hibernate?
+4.  What are 2 main method saving data ?
+5.  JPA consists of what kind of APIS ?
+6.  What is JpsRepository?
+7.  what is CrudRepository?
+8.  what is PagingAndSortingRepository?
+9.  Difference between JapRepository and crud ?
+10. What are the JPA inheritance ?
+
+
+---------------------------------------------------------
+--------------------   Data Modeling   ------------------
+---------------------------------------------------------
+1. what is data modeling ? 
+2. what kind of data modeling we have?
+3. what is Conceptual data modeling?
+4. what is Enterprise data modeling?
+5. What is logical data modeling ?
+6. what is Physical data modeling? 
+
+----------------------------------------------------------
+-------------------- System archtienct tips --------------
+----------------------------------------------------------
+
+1. Architecure is based on what?
+2. How we determone what architecure goal is the best ? 
+3. What does Architecture pattern express? 
+4. Explain 5 quality of softwarwe architeccure? 
+
+
+
+
+
+
+
+
+ISO 20200 
+it is standard electrocnic data interchnage world wide 
+Payments, Securities, Trade
+ETF : electronic transfer found
+SRF : Service Reference File 
+The international standard to design to simply global buisness comunication
+
+
+Universal financial industry message scheme:
+
+
+This standard covers financial information transfered between institutationt that 
+includes payment transactions, securities trading and settlement information, 
+
+
+
+
+
+
+
+TD bank questions

@@ -1,0 +1,204 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
+
+
+public class Quiz {
+	
+
+	/**
+	 * Question 1:
+	 * 
+	 * Create the hashCode and equals method for the following class.
+	 */
+	private static class MyObject {
+		
+		private String name;
+		private Integer quality;
+		private final int MAXIMUM = 23;
+		
+	}
+	
+	
+	/**
+	 * Question 2:
+	 * 
+     * This method was written for the purpose of removing all nulls from the given list.
+	 *
+	 * Improve this method as much as possible, while maintaining the method signature and the 
+	 * original purpose.
+	 * 
+	 * Hint: The input list may very, very large.
+	 */
+	public void clean(LinkedList<Integer> f) {
+
+		List lock = new ArrayList();
+		for (int i = 0; i < f.size(); i++) {
+			synchronized (lock) {
+				if (f.get(i) == null) {
+					lock = new ArrayList();
+					f.remove(i);
+				}
+				lock.add(f);
+			}
+		}
+	}
+	
+	
+	/**
+	 * Question 3:
+	 * 
+	 * Simplify the 'check' method as much as possible, while maintaining the method signature and current functionality.
+	 * Notes: 
+	 * 		- x,y,z are always guaranteed to be > 0.
+	 */
+	public boolean check(int x, int y, int z) {
+		if (x < w(x,z) && y < z || x < w(x,z) && y > z && z < y) {
+			return true;
+		}
+		return false;
+	}
+	private int w(int x, int z) {
+		int f = 0;
+		for (int i = 0; i < z; i++) {
+			f += x;
+		}
+		return f;
+	}
+	
+	
+	/**
+	 * Question 4
+	 * 
+	 * The check method is called by many threads, to perform checks and to keep count of the number of checks performed.
+	 * Each thread invokes the check method with its own list of Foo objects, the list and its contents are not shared with other threads.
+	 * Each thread invokes the check method with the same Properties instance.
+	 * 
+	 * Improve the performance of this method, ensuring the status object is updated before proceeding to the next check.
+	 * Also, please correct any defects that may be present in the code below.
+	 * The signature of the check method cannot be changed.
+	 */
+	public void check(List<Foo> list, Properties status) {
+		
+		synchronized (status) {
+			Iterator<Foo> i = list.iterator();
+			
+			Object lock = new Object();
+			while (i.hasNext()) {
+				
+				if (i.next().check()) {
+					String key = "COUNT";
+					int val = Integer.valueOf(status.getProperty(key));
+					synchronized (lock) {
+						status.setProperty(key, String.valueOf(val + 1));
+					}
+				}
+			}
+		}
+	}
+	private interface Foo {
+		public boolean check();
+	}
+	
+
+	
+	
+	
+	/**
+	 * Question 5
+	 * 
+	 * This method is supposed to return the number of 'active' employees that live in a city with a given name.
+	 * Please correct all issues (both logic and performance issues) with the following method, 
+	 * without changing the signature.
+	 * 
+	 * Notes:
+	 * There are two tables used here: EMPLOYEE and CITY.
+	 * The columns are:
+	 * 		EMPLOYEE.EMP_ID			The employee identifier.  Primary key.
+	 * 		EMPLOYEE.CITY_ID		The city where the employee lives.  A foreign key to the CITY table.
+	 * 		EMPLOYEE.EMP_ACTIVE		Contains "Y" if and only if the employee is 'active'. 
+	 * 		CITY.CITY_ID			Contains the primary key of the city.
+	 * 		CITY.CITY_NAME			The name of the city, unique.
+	 * 
+	 * All columns are separately indexed.
+	 * 
+	 */
+	public int countActiveEmployeesInCity(Connection c, String city) throws SQLException {
+		
+		
+		PreparedStatement ps = c.prepareStatement("SELECT EMP_ID, EMP_ACTIVE FROM EMPLOYEE, CITY WHERE CITY_NAME EQUALS ?");
+		ps.setString(1, city);
+		ResultSet rs = ps.executeQuery();
+		
+		int numActive = 0;
+		while (rs.next()) {
+			if ("Y".equals(rs.getString("EMP_ACTIVE"))) {
+				numActive++;
+			}
+		}
+		
+		ps.close();
+		return numActive;
+	}
+	
+	
+	/**
+	 * Question 6
+	 * 
+	 * Improve the following method as much as possible (without modifying the method signature).  
+	 * Ensure that it returns true if and only if both arrays contain the given value.
+	 *  
+	 * Note: The lists may be null and may contain null values.
+	 */
+	public boolean isInBoth(String value, String[] arrayA, String[] arrayB) {
+		
+		boolean found = false;
+		
+		try {
+			for (int a = 0; a <= arrayA.length; a++) {
+				for (int b = arrayB.length-1; b > 0; b--) {
+					if (arrayA[a].equals(arrayB[b])) {
+						throw new Exception("Found!");
+					}
+				}
+			}
+		} catch (Exception e) {
+			if ("Found!".equals(e.getMessage())) {
+				found = true;
+			}
+		}
+		
+		return found;
+	}
+	
+	
+}
+
+	/**
+	 * Question 7
+	 * (Javascript)
+	**/
+
+
+var A = (function() {
+	function Person(name) {
+		this.name = name;
+	}
+
+	var m = function() {
+		return "Hello " + this.name;
+	};
+
+	Person.prototype.getGreeting = m;
+
+	return Person;
+})();
+
+// After this line, what would you write to call into the above code and have it return “Hello Edgar”?
+// Answer: 
+
